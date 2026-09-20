@@ -1,6 +1,6 @@
 {
   "name": "@thetabber/mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Model Context Protocol server for TheTabber — let AI agents post, schedule, and manage social media across 9 platforms.",
   "keywords": [
     "mcp",
