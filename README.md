@@ -28,8 +28,12 @@ Pick the client you use. In each case, swap in your real `ttbr_live_…` key.
 ### Claude Code
 
 ```bash
-claude mcp add thetabber --env TABBER_API_KEY=ttbr_live_… -- npx -y @thetabber/mcp
+claude mcp add thetabber --scope user --env TABBER_API_KEY=ttbr_live_… -- npx -y @thetabber/mcp
 ```
+
+`--scope user` makes the server available in every directory. Without it, the server only
+loads inside the folder where you ran the command. Restart Claude Code after adding, then run
+`/mcp` to confirm `thetabber` is connected.
 
 ### Claude Desktop
 
@@ -94,6 +98,9 @@ For the full list of tools and the endpoints they map to, see
   your config, or the `--env` flag for Claude Code.
 - "No accounts" or an empty list: connect a social account in the TheTabber dashboard first.
 - `npx` fails to start: make sure Node.js 18+ is installed (`node --version`).
+- The agent does not see the server or has no posting tools: add it with `--scope user` and
+  restart Claude Code. MCP servers only load at session startup, and a project-scoped server
+  loads only inside that folder.
 - A post fails on one platform: the others still go out. Ask the agent to show the failure
   reason; rate limits and media requirements are the usual causes.
 

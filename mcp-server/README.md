@@ -45,8 +45,11 @@ The server reads two environment variables:
 ### Claude Code
 
 ```bash
-claude mcp add thetabber --env TABBER_API_KEY=ttbr_live_xxx -- npx -y @thetabber/mcp
+claude mcp add thetabber --scope user --env TABBER_API_KEY=ttbr_live_xxx -- npx -y @thetabber/mcp
 ```
+
+`--scope user` makes the server load in every directory, not just the folder you ran this in.
+Restart Claude Code afterward, then run `/mcp` to confirm it connected.
 
 ### Claude Desktop
 
