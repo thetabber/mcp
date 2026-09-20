@@ -1,0 +1,21 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "thetabber",
+  "version": "0.1.0",
+  "description": "Post, schedule, and manage social media across 9 platforms (TikTok, Instagram, YouTube, Facebook, X, LinkedIn, Pinterest, Threads, Bluesky) from any AI agent.",
+  "author": {
+    "name": "TheTabber",
+    "url": "https://thetabber.com"
+  },
+  "homepage": "https://thetabber.com/agents",
+  "repository": "https://github.com/thetabber/mcp",
+  "license": "MIT",
+  "keywords": [
+    "social-media",
+    "mcp",
+    "scheduling",
+    "ai-agent",
+    "claude",
+    "cursor"
+  ]
+}

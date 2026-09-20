@@ -1,0 +1,41 @@
+{
+  "name": "@thetabber/mcp",
+  "version": "0.1.0",
+  "description": "Model Context Protocol server for TheTabber — let AI agents post, schedule, and manage social media across 9 platforms.",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "thetabber",
+    "social-media",
+    "ai-agents",
+    "claude",
+    "cursor"
+  ],
+  "homepage": "https://thetabber.com/agents",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "thetabber-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.2"
+  }
+}
