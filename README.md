@@ -1,47 +1,39 @@
-# TheTabber Agent Plugin
+# TheTabber for AI agents
 
-Give any AI agent the ability to post, schedule, and manage social media across 9 platforms
-(TikTok, Instagram, YouTube, Facebook, X, LinkedIn, Pinterest, Threads, Bluesky) through
-[TheTabber](https://thetabber.com).
+Let your AI post for you. Connect this to Claude, Cursor, or any MCP client, and you can ask
+it to publish or schedule content across your social accounts (TikTok, Instagram, YouTube,
+Facebook, X, LinkedIn, Pinterest, Threads, Bluesky) through [TheTabber](https://thetabber.com).
 
-This repo is packaged two ways so it works everywhere:
+Things you can ask once it is set up:
 
-- Agent Plugin, following the [agent-plugins.org](https://agent-plugins.org) spec:
-  `plugin.json`, `mcp.json`, and an Agent Skill, for clients that support the standard.
-- MCP server on npm (`@thetabber/mcp`), for Claude Desktop, Claude Code, Cursor, or any MCP
-  client, via `npx`.
+- "Which social accounts do I have connected?"
+- "Post this photo to Instagram and TikTok with the caption 'launch day'."
+- "Schedule 'new episode is out' to all my accounts for 9am Monday, New York time."
+- "Did my last post actually go out everywhere? Show me anything that failed."
 
-## Layout
+## Setup (about 2 minutes)
 
-```
-plugin.json            # Agent Plugin manifest
-mcp.json               # Declares the TheTabber MCP server (npx @thetabber/mcp)
-skills/agent-mode/     # Agent Skill: the connect, upload, post, verify workflow
-mcp-server/            # Source for the @thetabber/mcp npm package (stdio MCP server)
-```
+1. Create a [TheTabber](https://thetabber.com) account and connect at least one social account
+   in the dashboard. The agent can only post to accounts you have already connected.
+2. Create an API key at
+   [thetabber.com/dashboard/settings/api-keys](https://thetabber.com/dashboard/settings/api-keys).
+   It looks like `ttbr_live_…`. Keep it private.
 
-## Prerequisites
+You will need Node.js 18 or newer installed (the server runs via `npx`).
 
-- Node.js 18+
-- A TheTabber API key (`ttbr_live_…`) from
-  [thetabber.com/dashboard/settings/api-keys](https://thetabber.com/dashboard/settings/api-keys)
-- At least one connected social account
+## Install
 
-Set your key in the environment:
+Pick the client you use. In each case, swap in your real `ttbr_live_…` key.
+
+### Claude Code
 
 ```bash
-export TABBER_API_KEY=ttbr_live_…
+claude mcp add thetabber --env TABBER_API_KEY=ttbr_live_… -- npx -y @thetabber/mcp
 ```
 
-## Quick start (MCP)
+### Claude Desktop
 
-Claude Code:
-
-```bash
-claude mcp add thetabber --env TABBER_API_KEY=$TABBER_API_KEY -- npx -y @thetabber/mcp
-```
-
-Claude Desktop or Cursor. Add to the client's MCP config:
+Open Settings, then Developer, then Edit Config, and add this to the `mcpServers` object:
 
 ```json
 {
@@ -55,23 +47,64 @@ Claude Desktop or Cursor. Add to the client's MCP config:
 }
 ```
 
-See [`mcp-server/README.md`](./mcp-server/README.md) for the full tool list and details.
+Restart Claude Desktop.
 
-## As an Agent Plugin
+### Cursor
 
-Clients that implement the [Agent Plugins](https://agent-plugins.org) spec can consume this
-repo directly. `plugin.json` describes the plugin, `mcp.json` wires up the MCP server, and
-`skills/agent-mode` provides the workflow skill. The client handles installation and
-enablement.
+Create `.cursor/mcp.json` in your project (or add to the existing one):
 
-## Develop the MCP server
-
-```bash
-cd mcp-server
-npm install
-npm run build
-TABBER_API_KEY=ttbr_live_… node dist/index.js
+```json
+{
+  "mcpServers": {
+    "thetabber": {
+      "command": "npx",
+      "args": ["-y", "@thetabber/mcp"],
+      "env": { "TABBER_API_KEY": "ttbr_live_…" }
+    }
+  }
+}
 ```
+
+### Any other MCP client
+
+Run `npx -y @thetabber/mcp` as a stdio server with `TABBER_API_KEY` set in its environment.
+
+## First run
+
+Ask your agent: "Which social accounts do I have connected?" If it lists your accounts, you
+are ready. Then try a real request like "Post 'hello from my AI' to my X account."
+
+The agent will ask whether to post now or schedule it, publish to the accounts you name, and
+tell you which ones succeeded.
+
+## What it can do
+
+- Post to one account or all of them at once.
+- Publish immediately, or schedule for a specific time and timezone.
+- Upload a local file or a public image or video URL (one video or up to 10 images per post).
+- Edit or cancel a scheduled post before it runs.
+- Report per-account results, so you know exactly what posted and what failed, and why.
+
+For the full list of tools and the endpoints they map to, see
+[`mcp-server/README.md`](./mcp-server/README.md).
+
+## Troubleshooting
+
+- "TABBER_API_KEY is not set": the key did not reach the server. Recheck the `env` value in
+  your config, or the `--env` flag for Claude Code.
+- "No accounts" or an empty list: connect a social account in the TheTabber dashboard first.
+- `npx` fails to start: make sure Node.js 18+ is installed (`node --version`).
+- A post fails on one platform: the others still go out. Ask the agent to show the failure
+  reason; rate limits and media requirements are the usual causes.
+
+## Other ways to use it
+
+- **REST API.** Call TheTabber directly from any language. See
+  [the API docs](https://thetabber.com/docs/api) and the OpenAPI spec at
+  [`/v1/openapi.json`](https://thetabber.com/v1/openapi.json).
+- **Agent Plugin.** This repo follows the [agent-plugins.org](https://agent-plugins.org) spec
+  (`plugin.json` + `mcp.json` + `skills/`), so clients that support it can install everything
+  in one step.
 
 ## License
 
